@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Medical Store Login</title>
+    <link rel="stylesheet" href="~/css/NGOSignup.css" />
+</head>
+<body>
+    <div class="signup-form">
+        <h2>NGO Login</h2>
+        <form method="post" action="/NGO/NGOLogin">
+            <div class="form-group">
+                <label for="NGOUserName">Username</label>
+                <input type="text" id="NGOUserName" name="NGOUserName" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="Password">Password</label>
+                <div class="password-input">
+                    <input type="password" id="Password" name="Password" class="form-control" required />
+                    <i class="eye-icon" id="togglePassword" onclick="togglePasswordVisibility()"></i>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Log In</button>
+        </form>
+        <p class="login-link">Don't have an account? <a href="/NGO/NGOSignUp">Sign up</a></p>
+    </div>
+    <script>
+        function togglePasswordVisibility() {
+            var passwordInput = document.getElementById("Password");
+            var eyeIcon = document.getElementById("togglePassword");
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                eyeIcon.classList.add("visible");
+            } else {
+                passwordInput.type = "password";
+                eyeIcon.classList.remove("visible");
+            }
+        }
+    </script>
+</body>
+</html>

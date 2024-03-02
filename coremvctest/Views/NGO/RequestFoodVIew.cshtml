@@ -1,0 +1,195 @@
+﻿@{
+    ViewData["Title"] = "RequestFoodVIew";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NGO Dashboard</title>
+    <link rel="stylesheet" href="~/css/NGOSignup.css" />
+      <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/medicinesoperations.js"></script>
+    <script src="~/js/NgoOperations.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #f4f4f4;
+            color: #4CAF50;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: #fff;
+            text-align: center;
+            padding: 1em;
+        }
+
+        main {
+            padding: 2em;
+        }
+
+        .request-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5em;
+            color: black;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.5em;
+            margin-bottom: 1em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.5em;
+            margin-bottom: 1em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            appearance: none; /* Remove default arrow icon in some browsers */
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path d="M8 10.879V2h1v8.879l2.56-2.56.707.707L8 12.707l-3.267-3.267.707-.707L7 10.879V2h1v8.879l2.56-2.56.707.707L8 12.707l-3.267-3.267.707-.707L7 10.879z"/></svg>') no-repeat right 0.5em center;
+            background-size: 1.5em; /* Adjust the arrow icon size */
+        }
+
+            select:hover,
+            select:focus {
+                border-color: #555;
+            }
+
+        .medicine-request {
+            border: 1px solid #ccc;
+            padding: 1em;
+            margin-bottom: 1em;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            padding: 0.5em 1em;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+            button:hover {
+                background-color: #555;
+            }
+
+        footer {
+            background-color: #4CAF50;
+            color: #fff;
+            text-align: center;
+            padding: 1em;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+       #loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 2000;
+        }
+
+        .spinner {
+            border: 8px solid #4CAF50;
+            border-top: 8px solid #4CAF50;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+
+        .spinner.rotating {
+            transform: rotate(360deg);
+        }
+    </style>
+</head>
+<body>
+    <div id="loader">
+    <div class="spinner"></div>
+</div>
+    <header>
+        <h1>NGO Dashboard</h1>
+    </header>
+
+    <main>
+        <section class="request-form">
+            <h2>Request Food</h2>
+            <div id="foodRequestForm">
+                <!-- NGO Name (Assuming the user is already authenticated) -->
+                <label for="ngoName">NGO Name:</label>
+
+                <!-- Medicine Requests -->
+                <div id="foodRequests">
+                    <div class="medicine-request" id="medicineRequests0">
+                        <label for="food">Request Food</label>
+                        <select id="foodSelection" name="foodSelection" required>
+                           
+                        </select>
+
+                        <label for="quantity">Quantity:</label>
+                        <input type="number" id="quantity" name="quantity" required>
+                    </div>
+                    <!-- Add more medicine request fields as needed -->
+                </div>
+
+                <!-- Add More Foods Button -->
+                <button type="button" onclick="addFoodRequest()">Add More Food</button>
+
+                <!-- Expected Delivery Time -->
+                <label for="deliveryTime">Expected Delivery Time:</label>
+                <input type="date" id="deliveryTime" name="deliveryTime" required>
+
+                <!-- Submit Button -->
+                <button type="submit" onclick="submitFoodData()">Submit Request</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <!-- Footer content -->
+    </footer>
+
+    <script>
+        function addFoodRequest() {
+            // Clone the first medicine request field and append it to the container
+            var foodRequestContainer = document.getElementById('foodRequests');
+            var clone = foodRequestContainer.firstElementChild.cloneNode(true);
+
+            // Set a unique ID for the cloned container
+            var newIndex = foodRequestContainer.children.length;
+            clone.id = 'foodRequests' + newIndex;
+
+            // Append the cloned container to the container
+            foodRequestContainer.appendChild(clone);
+        }
+    </script>
+
+</body>
+</html>

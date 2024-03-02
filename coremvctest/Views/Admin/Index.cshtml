@@ -1,0 +1,50 @@
+﻿@page
+@model coremvctest.Views.Admin.IndexModel
+@{
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin 1</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="~/css/AdminCustom.css">
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="/Admin/Home">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+   @* <main>
+        <section class="update-list">
+            <h2>Update List</h2>
+            <ul>
+                @foreach (var update in Model.Updates)
+                {
+                    <li>@update</li>
+                }
+            </ul>
+            <button id="processUpdatesButton">Process Updates</button>
+        </section>
+    </main>*@
+    
+    <footer>
+        <!-- Footer content -->
+    </footer>
+
+    <script>
+        document.getElementById("processUpdatesButton").addEventListener("click", function() {
+            // Simulate processing updates
+            console.log("Updates processed.");
+        });
+    </script>
+</body>
+</html>

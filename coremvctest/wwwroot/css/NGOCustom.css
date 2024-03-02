@@ -1,0 +1,82 @@
+﻿/* Reset some default styles */
+body, h1, h2, h3, p {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background-color: #4CAF50;
+    padding: 1em;
+    color: white;
+    text-align: center;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav li {
+    display: inline;
+    margin: 0 1em;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+}
+
+main {
+    padding: 2em;
+}
+
+.request-list {
+    background-color: #f8f8f8;
+    padding: 2em;
+    border-radius: 10px;
+    text-align: center;
+    margin: 1em;
+}
+
+    .request-list h2 {
+        font-size: 1.5em;
+        margin-bottom: 1em;
+    }
+
+    .request-list ul {
+        list-style-type: none;
+        padding: 0;
+        text-align: left;
+    }
+
+    .request-list li {
+        font-size: 1em;
+        color: #555;
+        margin-bottom: 0.5em;
+    }
+
+#manageRequestsButton {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 1em 2em;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 1em;
+}
+
+    #manageRequestsButton:hover {
+        background-color: #45a049;
+    }
+
+footer {
+    background-color: #f8f8f8;
+    padding: 1em;
+    text-align: center;
+}

@@ -1,0 +1,32 @@
+﻿@page
+@model coremvctest.Views.FoodInventory.FoodInventoryDashboardModel
+@{
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Inventory Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="~/css/MedicalStoreCustom.css"/>
+     <script src="~/js/medicinesoperations.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Food Inventory Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="/FoodInventory/UpdateFood">Update Unused Food</a></li>
+                <li><a href="/CommonDashboard/LogOut">Logout</a></li>
+                <li><a href="#" onclick="goBack()">Back</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <footer>
+        <!-- Footer content -->
+    </footer>
+</body>
+</html>

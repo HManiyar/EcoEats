@@ -1,0 +1,134 @@
+﻿@page
+@model coremvctest.Views.Admin.IndexModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Add your meta tags and CSS links here -->
+    <link rel="stylesheet" href="~/css/AdminCustom.css" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/adminoperations.js"></script>
+    <style>
+        /* Add your existing CSS styles here */
+
+        /* Reset some default styles */
+        body, h1, h2, h3, p {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .row {
+            display: flex;
+        }
+
+        header {
+            background-color: #4CAF50;
+            padding: 1em;
+            color: white;
+            text-align: center;
+        }
+
+        /* Card styles */
+        .card {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 10px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            position: relative; /* Set the card position to relative */
+            overflow: hidden;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            position: relative;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #efffea;
+            padding: 20px;
+        }
+
+            /* Sidebar link styles */
+            .sidebar a {
+                padding: 15px 25px;
+                text-decoration: none;
+                font-size: 20px;
+                color: black;
+                display: block;
+                transition: 0.3s;
+            }
+
+                /* Change color on hover */
+                .sidebar a:hover {
+                    color: #f1f1f1;
+                }
+
+        /* Content area styles */
+        .content {
+            margin-left: 0;
+            padding: 20px;
+            transition: 0.3s;
+            flex: 1;
+        }
+        /* Menu bar button styles */
+        .menu-bar {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            cursor: pointer;
+            font-size: 24px;
+        }
+
+        .flex-container {
+            display: flex;
+            flex-wrap: nowrap; /* Prevent wrapping */
+            justify-content: space-between; /* Space between the two divs */
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h4 style="text-align: center;">Manage Foods</h4>
+        <!-- Sidebar menu inside the card -->
+        <div class="row">
+            <div class="flex-container">
+                <div class="sidebar">
+                    <a href="#" onclick="openSelectedTab('searchFood')">Search Foods</a>
+                    <a href="#" onclick="openSelectedTab('searchShortFood')">Short Duration Foods</a>
+                    <!-- Add other options here as needed -->
+                </div>
+                <div class="content">
+                    <div id="searchedFoodView"></div>
+                    <div id="searchedShortLivedFoodView"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // JavaScript function to toggle the sidebar
+        function toggleSidebar() {
+            var sidebar = document.querySelector(".sidebar");
+            var content = document.querySelector(".content");
+
+            if (sidebar.style.width === "0px") {
+                sidebar.style.width = "250px";
+                content.style.marginLeft = "250px";
+            } else {
+                sidebar.style.width = "0";
+                content.style.marginLeft = "0";
+            }
+        }
+    </script>
+</body>
+</html>

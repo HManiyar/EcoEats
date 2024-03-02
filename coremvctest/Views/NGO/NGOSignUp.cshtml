@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>NGO Sign Up</title>
+     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/js/LocationOperations.js"></script>
+    <link rel="stylesheet" href="~/css/NGOSignup.css" />
+</head>
+<body>
+     <div id="loader">
+    <div class="spinner"></div>
+</div>
+    <div class="signup-form">
+        <h2>NGO Sign Up</h2>
+        <form method="post">
+            <div class="form-group">
+                <label for="Name">NGO Name</label>
+                <input type="text" id="Name" name="Name" class="form-control" required />
+            </div>
+           <div class="form-group">
+				<label for="Location">Location</label>
+				<select id="Location" name="Location" class="form-control" required>
+					<!-- Dropdown options will be dynamically populated using JavaScript -->
+				</select>
+			</div>
+            <div class="form-group">
+                <label for="ContactPerson">Contact Person</label>
+                <input type="text" id="ContactPerson" name="ContactPerson" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="Email">Email</label>
+                <input type="email" id="Email" name="Email" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="Phone">Phone</label>
+                <input type="text" id="Phone" name="Phone" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="NGONumber">NGO Number</label>
+                <input type="text" id="NGONumber" name="NGONumber" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="NGOUserName">Username</label>
+                <input type="text" id="NGOUserName" name="NGOUserName" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="Password">Password</label>
+                <input type="password" id="Password" name="Password" class="form-control" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Sign Up</button>
+            <p class="login-link">Already have an account? <a href="/NGO/NGOLogin">Log in</a></p>
+        </form>
+    </div>
+</body>
+</html>

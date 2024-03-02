@@ -1,0 +1,128 @@
+﻿@page
+@*@model List<ExpireWarnings>*@
+@model coremvctest.Views.FoodInventory.FoodInventoryDashboardModel
+@{
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Store Dashboard</title>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/medicinesoperations.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="~/css/MedicalStoreCustom.css" />
+    <style>
+        /* Style for label elements */
+        label {
+            display: block; /* Place labels on separate lines */
+            margin-bottom: 5px; /* Add some spacing between labels and inputs */
+            font-weight: bold; /* Make labels bold for emphasis */
+        }
+
+        /* Style for text input and select elements */
+        input[type="text"],
+        select {
+            width: 100%; /* Make them full width of their container */
+            padding: 10px; /* Add some padding for spacing */
+            margin-bottom: 15px; /* Create space between input elements */
+            border: 1px solid #ccc; /* Add a simple border */
+            border-radius: 5px; /* Rounded corners */
+        }
+
+        /* Style for textarea elements */
+        textarea {
+            width: 100%; /* Make it full width */
+            padding: 10px; /* Add padding for spacing */
+            margin-bottom: 15px; /* Create space between textarea elements */
+            border: 1px solid #ccc; /* Add a simple border */
+            border-radius: 5px; /* Rounded corners */
+        }
+
+        /* Style for select elements (dropdowns) */
+        select {
+            appearance: none; /* Remove default styles on some browsers */
+            padding-right: 25px; /* Add space for the dropdown arrow */
+            background: #fff; /* Set background color */
+            background-image: url("arrow.png"); /* Add a custom dropdown arrow image */
+            background-repeat: no-repeat;
+            background-position: 95% center;
+            cursor: pointer; /* Add a pointer cursor for user interaction */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Food Inventory Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Update Unused Food</a></li>
+                <li><a href="/CommonDashboard/LogOut">Logout</a></li>
+               <li><a href="#" onclick="goBack()">Back</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="update-form">
+            <h2>Update Unused Foods</h2>
+            <form method="post" action="/FoodInventory/UpdateFood" enctype="multipart/form-data">
+                <label for="FoodName">Food Name</label>
+                <input type="text" id="FoodName" name="FoodName" required>
+
+                <label for="Quantity">Quantity</label>
+                <input type="number" id="Quantity" name="Quantity" required>
+
+                <label for="LotNumber ">Lot Number</label>
+                <input type="text" id="LotNumber" name="LotNumber" required>
+
+                <label for="StorageConditions">Storage Conditions</label>
+                <input type="text" id="StorageConditions" name="StorageConditions" required>
+
+                <label for="Packaging">Packaging</label>
+                <input type="text" id="Packaging" name="Packaging" required>
+
+                <label for="ManufacturerInformation">Manufacturer Information</label>
+                <input type="text" id="ManufacturerInformation" name="ManufacturerInformation" required>
+
+                <label for="Condition">Condition</label>
+                <select id="Condition" name="Condition" required>
+                    <option value="New">New</option>
+                    <option value="Unopened">Unopened</option>
+                    <option value="OriginalPackaging">In Original Packaging</option>
+                </select>
+
+                <label for="AdditionalNotes">Additional Notes</label>
+                <textarea id="AdditionalNotes" name="AdditionalNotes"></textarea>
+
+               <label for="ExpiryDate">Expiry Date</label>
+    <input type="date" id="ExpiryDate" name="ExpiryDate" min="{{ date('Y-m-d') }}" required>
+
+                <div id="customDateContainer" style="display: none;">
+                    <label for="CustomExpiryDate">Custom Expiry Date</label>
+                    <input type="date" id="CustomExpiryDate" name="CustomExpiryDate">
+                </div>
+
+                <label for="Category" hidden>Category/Therapeutic Area</label>
+                <select id="Category" name="Category" hidden>
+                    <option value="cardiovascular">Cardiovascular</option>
+                    <option value="respiratory">Respiratory</option>
+                    <!-- Add more options as needed -->
+                </select>
+
+                <label for="ImageFileName">Image Name</label>
+                <input type="file" id="ImageFileName" name="ImageFileName" accept="image/*" onchange="handleImageUpload();" required>
+                <input type="hidden" id="ImageBase64" name="ImageBase64" value="">
+                <input type="submit" value="Submit">
+            </form>
+        </section>
+    </main>
+
+
+    <footer>
+        <!-- Footer content -->
+    </footer>
+</body>
+</html>

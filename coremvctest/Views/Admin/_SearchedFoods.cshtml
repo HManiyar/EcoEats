@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        /* Search container styles */
+        .search-container {
+            text-align: center;
+            margin: 20px;
+        }
+
+        /* Search form styles */
+        .search-form {
+            display: inline-block;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        /* Search input styles */
+        .search-input {
+            width: 200px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-right: 5px;
+            font-size: 14px;
+        }
+
+        /* Search button styles */
+        .search-button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* DataTable styles */
+        #recordsTable {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            margin: 20px;
+        }
+
+            #recordsTable th {
+                background-color: #4CAF50; /* Green header background */
+                color: #fff; /* White header text color */
+                padding: 10px;
+                text-align: left;
+            }
+
+            #recordsTable td {
+                background-color: #efffea; /* Light green row background */
+                padding: 10px;
+                text-align: left;
+            }
+
+                /* Add a black border between columns */
+                #recordsTable th + th, #recordsTable td + td {
+                    border-left: 1px solid #000; /* Black border between columns */
+                }
+    </style>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+    <div class="search-container">
+        <div id="searchForm" class="search-form">
+            <input type="text" id="searchInput" placeholder="Search..." class="search-input">
+            <button type="submit" class="search-button" onclick="searchFood(document.getElementById('searchInput').value)">Search</button>
+        </div>
+    </div>
+
+    <!-- DataTable -->
+    <table id="recordsTable" class="display" style="width:100%">
+        <thead>
+            <tr>
+               
+                <th>Food Name</th>
+                <th>Quantity</th>
+                <th>Lot Number</th>
+                <th>Storage Conditions</th>
+                <th>Packaging</th>
+                <th>Manufacturer Information</th>
+                <th>Additional Notes</th>
+                <th>Category</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+</body>
+</html>

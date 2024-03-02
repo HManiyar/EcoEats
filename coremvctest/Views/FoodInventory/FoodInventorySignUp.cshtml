@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<title>Food Inventory Signup</title>
+	<link rel="stylesheet" href="~/css/MedicalStoreSignUpCustom.css" />
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/js/LocationOperations.js"></script>
+</head>
+<body>
+	<div class="signup-form">--
+		<h2>Food Inventory Signup</h2>
+		<form method="post" action="/FoodInventory/FoodInventorySignUp">
+			<div class="form-group">
+				<label for="StoreName">Store Name</label>
+				<input type="text" id="StoreName" name="StoreName" class="form-control" required />
+			</div>
+			<div class="form-group">
+				<label for="Location">Location</label>
+				<select id="Location" name="Location" class="form-control" required>
+					<!-- Dropdown options will be dynamically populated using JavaScript -->
+				</select>
+			</div>
+			<div class="form-group">
+				<label for="ContactPerson">Contact Person</label>
+				<input type="text" id="ContactPerson" name="ContactPerson" class="form-control" required />
+			</div>
+			<div class="form-group">
+				<label for="Email">Email</label>
+				<input type="email" id="Email" name="Email" class="form-control" required />
+			</div>
+			<div class="form-group">
+				<label for="Phone">Phone</label>
+				<input type="text" id="Phone" name="Phone" class="form-control" required />
+			</div>
+			<div class="form-group">
+				<label for="LicenseNumber">License Number</label>
+				<input type="text" id="LicenseNumber" name="LicenseNumber" class="form-control" required />
+			</div>
+			<div class="form-group">
+				<label for="FoodInventoryUserName">Username</label>
+				<input type="text" id="FoodInventoryUserName" name="FoodInventoryUserName" class="form-control" required />
+			</div>
+			<div class="form-group">
+				<label for="Password">Password</label>
+				<input type="password" id="Password" name="Password" class="form-control" required />
+			</div>
+			<button type="submit" class="btn btn-primary">Sign Up</button>
+			<p class="login-link">Already have an account? <a href="/FoodInventory/FoodInventoryLogin">Log in</a></p>
+		</form>
+	</div>
+</body>
+</html>

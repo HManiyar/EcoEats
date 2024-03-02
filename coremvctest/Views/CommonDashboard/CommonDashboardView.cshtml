@@ -1,0 +1,50 @@
+﻿@page
+@model coremvctest.Views.CommonDashboard.CommonDashboardViewModel
+@{
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedShare Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="~/css/CommonDashboardCustom.css"/>
+</head>
+<body>
+    <header>
+        <h1>MedShare</h1>
+       @* <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>*@
+    </header>
+    
+    <main>
+        <section class="entity">
+            <h2>Food Inventory</h2>
+            <p>Update unused foods</p>
+            <a href="/FoodInventory/FoodInventoryLogin">Go to Dashboard</a>
+        </section>
+        
+        <section class="entity">
+            <h2>Admin</h2>
+            <p>Manage updates</p>
+            <a href="/Admin/Index">Go to Dashboard</a>
+        </section>
+        
+        <section class="entity">
+            <h2>NGO</h2>
+            <p>Request unused food</p>
+            <a href="/NGO/NGOLogin">Go to Dashboard</a>
+        </section>
+    </main>
+    
+    <footer>
+        <!-- Footer content -->
+    </footer>
+</body>
+</html>

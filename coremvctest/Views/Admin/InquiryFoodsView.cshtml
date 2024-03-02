@@ -1,0 +1,108 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        /* Search container styles */
+        .search-container {
+            text-align: center;
+            margin: 20px;
+        }
+
+        /* Search form styles */
+        .search-form {
+            display: inline-block;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        /* Search input styles */
+        .search-input {
+            width: 200px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin-right: 5px;
+            font-size: 14px;
+        }
+
+        /* Search button styles */
+        .search-button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* DataTable styles */
+        #inquiryMedTable {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            margin: 20px;
+        }
+
+        #inquiryMedTable th {
+                background-color: #4CAF50; /* Green header background */
+                color: #fff; /* White header text color */
+                padding: 10px;
+                text-align: left;
+            }
+
+        #inquiryMedTable td {
+                background-color: #efffea; /* Light green row background */
+                padding: 10px;
+                text-align: left;
+            }
+
+                /* Add a black border between columns */
+            #inquiryMedTable th + th, #inquiryMedTable td + td {
+                    border-left: 1px solid #000; /* Black border between columns */
+                }
+    </style>
+
+    
+    <script src="~/js/adminoperations.js"></script>
+   
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Check if the specific element or identifier exists on the page
+            var inquiryTable = document.getElementById('inquiryMedTable');
+
+            // Call the inquiry view function if the element exists
+            if (inquiryTable) {
+                inquiryViewFunction();
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>Manage Inquiries</h1>
+
+    <!-- DataTable -->
+    <table id="inquiryMedTable" class="display" style="width:100%">
+        <thead>
+            <tr>
+
+                <th>NGO Name</th>
+                <th>Delivery Time</th>
+                <th>Report</th>
+               @* <th>Inquired Date</th>
+                <th>Report</th>*@
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+</body>
+</html>
