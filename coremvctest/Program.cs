@@ -1,9 +1,13 @@
 using coremvctest.Data;
+using coremvctest.IService;
+using coremvctest.Service;
+using coremvctest.Utility.Middlewares;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
 builder.Services.AddAutoMapper(typeof(Program));
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -50,6 +54,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseMiddleware<JwtMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
