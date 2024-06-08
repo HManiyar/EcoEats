@@ -1,4 +1,27 @@
-﻿function loaddatetimefield() { 
+﻿function openTab(tabName) {
+    var tabContents = document.getElementsByClassName("tab-content");
+    for (var i = 0; i < tabContents.length; i++) {
+        tabContents[i].style.display = "none";
+    }
+
+    var tabLinks = document.getElementsByClassName("tab");
+    for (var i = 0; i < tabLinks.length; i++) {
+        tabLinks[i].classList.remove("active");
+    }
+
+    document.getElementById(tabName).style.display = "block";
+    document.querySelector("[onclick*='" + tabName + "']").classList.add("active");
+
+    if (tabName == "updateunusedfoodTab") {
+        window.location.href = '/FoodInventory/UpdateFood';
+        return;
+    }
+    if (tabName == "logoutTab") {
+        window.location.href = '/CommonDashboard/LogOut';
+        return;
+    }
+}
+function loaddatetimefield() { 
     var expiryWarningSelect = document.getElementById("ExpiryWarningId");
     var customDateContainer = document.getElementById("customDateContainer");
     var customExpiryDateInput = document.getElementById("CustomExpiryDate");
@@ -91,3 +114,4 @@ function submitFoodData() {
 function goBack() {
     window.history.back();
 }
+

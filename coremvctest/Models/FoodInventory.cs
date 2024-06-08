@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace coremvctest.Models
 {
@@ -9,18 +10,21 @@ namespace coremvctest.Models
     {
         [Key]
         public int FoodInventoryId { get; set; }
-        public string Password { get; set; }
-        public string StoreName { get; set; }
-        public string Location { get; set; }
-        public string ContactPerson { get; set; }
+        [JsonIgnore]
+        public byte[]? HashPassword { get; set; }
+        [JsonIgnore]
+        public byte[]? Salt { get; set; }
+        public string? StoreName { get; set; }
+        public string? Location { get; set; }
+        public string? ContactPerson { get; set; }
         [EmailAddress]
-        public string Email { get; set; }
+        public string? Email { get; set; }
         [Phone]
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
         public DateTime RegistrationDate { get; set; }
-        public string LicenseNumber { get; set; }
+        public string? LicenseNumber { get; set; }
         public bool IsActive { get; set; }
-        public string FoodInventoryUserName { get; set; }
+        public string? FoodInventoryUserName { get; set; }
     }
 
     public class FoodsEntity

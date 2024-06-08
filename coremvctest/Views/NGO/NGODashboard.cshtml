@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <!-- Add your meta tags and CSS links here -->
-    <link rel="stylesheet" href="~/css/AdminCustom.css" />
+    <link rel="stylesheet" href="~/css/NGOCustom.css" />
     <style>
         /* Add your existing CSS styles here */
 
@@ -41,6 +41,15 @@
     </style>
 </head>
 <body>
+    <header>
+        <h1>NGO Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="/CommonDashboard/LogOut">Logout</a></li>
+                <li><a href="#" onclick="goBack()">Back</a></li>
+            </ul>
+        </nav>
+    </header>
     <div class="card">
         <!-- Tab links -->
         <div class="tabs-container">
@@ -72,6 +81,9 @@
                 window.location.href = '/NGO/RequestFoodVIew';
                 return;
             }
+        }
+          function goBack() {
+        window.history.back();
         }
     </script>
 </body>

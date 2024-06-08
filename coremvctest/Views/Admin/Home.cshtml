@@ -45,6 +45,15 @@
     </style>
 </head>
 <body>
+     <header>
+        <h1>Admin Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="/CommonDashboard/LogOut">Logout</a></li>
+                <li><a href="#" onclick="goBack()">Back</a></li>
+            </ul>
+        </nav>
+    </header>
     <div class="card">
         <!-- Tab links -->
         <div class="tabs-container">
@@ -80,6 +89,9 @@
                 window.location.href = '/Admin/InquiryFoodsView';
                 return;
             }
+        }
+        function goBack() {
+        window.history.back();
         }
     </script>
 </body>
