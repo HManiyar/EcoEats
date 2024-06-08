@@ -6,8 +6,10 @@ using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
 using AutoMapper;
 using coremvctest.Data;
+using coremvctest.IService;
 using coremvctest.Models;
 using coremvctest.RequestModels;
+using coremvctest.Utility.Content;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -21,11 +23,13 @@ namespace coremvctest.Controllers
         private readonly ApplicationDbContext _db;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
-        public FoodInventoryController(ApplicationDbContext db,IConfiguration configuration, IMapper mapper)
+        private readonly IAuthenticationService _authenticationService;
+        public FoodInventoryController(ApplicationDbContext db, IConfiguration configuration, IMapper mapper, IAuthenticationService authenticationServices)
         {
             _db = db;
             _configuration = configuration;
-             _mapper = mapper;
+            _mapper = mapper;
+            _authenticationService = authenticationServices;
         }
         public IActionResult FoodInventoryDashboard()
         {
@@ -44,7 +48,7 @@ namespace coremvctest.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> UpdateFood(FoodsEntity foodsData, IFormFile ImageFileName)
-            {
+        {
             try
             {
                 foodsData.RemainingDays = 0;
@@ -143,7 +147,7 @@ namespace coremvctest.Controllers
                     + "Contact Person: " + foodStore.ContactPerson + "\n"
                     + "Email: " + foodStore.Email + "\n"
                     + "Phone: " + foodStore.Phone + "\n";
-                var credentials =new BasicAWSCredentials(_configuration["AWS:AccessKeyId"], _configuration["AWS:SecretAccessKey"]);
+                var credentials = new BasicAWSCredentials(_configuration["AWS:AccessKeyId"], _configuration["AWS:SecretAccessKey"]);
                 var client = new AmazonSimpleNotificationServiceClient(credentials, Amazon.RegionEndpoint.USEast1);
                 var request = new PublishRequest()
                 {
@@ -184,6 +188,17 @@ namespace coremvctest.Controllers
             if (existingFoodInventory != null && VerifyPassword(foodStore.Password ?? String.Empty, existingFoodInventory.Salt ?? new byte[0], existingFoodInventory.HashPassword ?? new byte[0]))
             {
                 HttpContext.Session.SetInt32("FoodInventoryId", existingFoodInventory.FoodInventoryId);
+                string token = _authenticationService.GenerateTokenForFoodInventory(existingFoodInventory);
+                if (token == UserMessages.invalidCredentials)
+                    return View("FoodInventoryLogin");
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddMinutes(120)
+                };
+                Response.Cookies.Append("AuthToken", token, cookieOptions);
                 return RedirectToAction("FoodInventoryDashboard");
             }
             else
@@ -197,7 +212,7 @@ namespace coremvctest.Controllers
         {
             var ms = new MemoryStream();
             var bucketName = "foodsimagesmrdsharebucket";
-            var credentials =new BasicAWSCredentials(_configuration["AWS:AccessKeyId"], _configuration["AWS:SecretAccessKey"]);
+            var credentials = new BasicAWSCredentials(_configuration["AWS:AccessKeyId"], _configuration["AWS:SecretAccessKey"]);
             var client = new AmazonS3Client(credentials, Amazon.RegionEndpoint.USEast1);
 
             var isBucketExists = await AmazonS3Util.DoesS3BucketExistV2Async(client, bucketName);
@@ -208,8 +223,9 @@ namespace coremvctest.Controllers
                     BucketName = bucketName,
                     UseClientRegion = true
                 };
-                try { 
-                await client.PutBucketAsync(bucketRequest);
+                try
+                {
+                    await client.PutBucketAsync(bucketRequest);
                 }
                 catch (AmazonS3Exception ex)
                 {
@@ -240,13 +256,13 @@ namespace coremvctest.Controllers
         public async Task<IActionResult> GetImage(string fileName)
         {
             var bucketName = "foodsimagesmedshare";
-            var credentials =new BasicAWSCredentials(_configuration["AWS:AccessKeyId"], _configuration["AWS:SecretAccessKey"]);
+            var credentials = new BasicAWSCredentials(_configuration["AWS:AccessKeyId"], _configuration["AWS:SecretAccessKey"]);
             var client = new AmazonS3Client(credentials, Amazon.RegionEndpoint.USEast1);
             var response = await client.GetObjectAsync(bucketName, fileName);
 
             return File(response.ResponseStream, response.Headers.ContentType);
         }
-      
+
 
     }
 }
