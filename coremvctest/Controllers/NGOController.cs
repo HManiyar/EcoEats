@@ -9,6 +9,9 @@ using MySqlConnector;
 using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using Accord.MachineLearning;
+using System.Security.Cryptography;
+using coremvctest.RequestModels;
+using AutoMapper;
 
 namespace coremvctest.Controllers
 {
@@ -16,10 +19,12 @@ namespace coremvctest.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _db;
-        public NGOController(ApplicationDbContext db,IConfiguration configuration)
+        private readonly IMapper _mapper;
+        public NGOController(ApplicationDbContext db,IConfiguration configuration, IMapper mapper)
         {
             _db = db;
             _configuration = configuration;
+            _mapper = mapper;
         }
         public IActionResult NGODashboard()
         {
@@ -38,44 +43,77 @@ namespace coremvctest.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult NGOLogin(NGOEntity ngo)
+        public IActionResult NGOLogin(NGOLoginRequestModel ngo)
         {
             var existingNGO = _db.NGOs.SingleOrDefault(m =>
          m.NGOUserName == ngo.NGOUserName);
 
-            if (existingNGO != null && VerifyPassword(ngo.Password, existingNGO.Password))            {
+            if (existingNGO != null && VerifyPassword(ngo.Password ?? String.Empty, existingNGO.Salt ?? new byte[0], existingNGO.HashPassword ?? new byte[0]))            {
                 HttpContext.Session.SetInt32("NGOId", existingNGO.NGOId);
                 HttpContext.Session.SetString("NGOLocation", existingNGO.Location);
                 return RedirectToAction("NGODashboard");
             }
             else
             {
-                // Authentication failed, return a view indicating login failure
+                //Authentication failed, return a view indicating login failure
                 return View("NGOLogin");
             }
         }
-        public string HashPassword(string password)
+        public byte[] GenerateSalt(int length)
         {
-            // Generate a random salt
-            string salt = BCrypt.Net.BCrypt.GenerateSalt();
+            byte[] salt = new byte[length];
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                rng.GetBytes(salt);
+            }
+            return salt;
+        }
+        public byte[] HashPassword(string password, byte[] salt, int iterations = 10000)
+        {
+            using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations))
+            {
+                return pbkdf2.GetBytes(32); // 32 bytes for SHA256
+            }
+        }
+        public bool VerifyPassword(string password, byte[] salt, byte[] hash, int iterations = 10000)
+        {
 
-            // Hash the password with the salt
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
-
-            return hashedPassword;
+            byte[] testHash = HashPassword(password, salt, iterations);
+            return SlowEquals(hash, testHash);
         }
 
-        public bool VerifyPassword(string password, string hashedPassword)
+        private static bool SlowEquals(byte[] a, byte[] b)
         {
-            // Verify the password against the hashed password
-            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+            uint diff = (uint)a.Length ^ (uint)b.Length;
+            for (int i = 0; i < a.Length && i < b.Length; i++)
+                diff |= (uint)(a[i] ^ b[i]);
+            return diff == 0;
         }
+        //public string HashPassword(string password)
+        //{
+        //    // Generate a random salt
+        //    string salt = BCrypt.Net.BCrypt.GenerateSalt();
+
+        //    // Hash the password with the salt
+        //    string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
+
+        //    return hashedPassword;
+        //}
+
+        //public bool VerifyPassword(string password, string hashedPassword)
+        //{
+        //    // Verify the password against the hashed password
+        //    return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+        //}
         [HttpPost]
-        public async Task<IActionResult> NGOSignUp(NGOEntity ngo)
+        public async Task<IActionResult> NGOSignUp(NGORequestModels ngoData)
         {
             if (ModelState.IsValid)
             {
-                ngo.Password = HashPassword(ngo.Password);
+                byte[] salt = GenerateSalt(16);
+                ngoData.Salt = salt;
+                ngoData.HashPassword = HashPassword(ngoData.Password ?? String.Empty, salt);
+                NGOEntity ngo = _mapper.Map<NGOEntity>(ngoData);
                 ngo.IsActive = false;
                 _db.NGOs.Add(ngo);
                 _db.SaveChanges();

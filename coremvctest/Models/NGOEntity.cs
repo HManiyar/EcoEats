@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace coremvctest.Models
 {
@@ -22,9 +23,10 @@ namespace coremvctest.Models
 
         [Required]
         public string Phone { get; set; }
-
-        [Required]
-        public string Password { get; set; }
+        [JsonIgnore]
+        public byte[]? HashPassword { get; set; }
+        [JsonIgnore]
+        public byte[]? Salt { get; set; }
 
         [Required]
         public string NGONumber { get; set; }

@@ -5,26 +5,69 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Food Inventory Dashboard</title>
+      <!-- Add your meta tags and CSS links here -->
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="~/css/MedicalStoreCustom.css"/>
      <script src="~/js/medicinesoperations.js"></script>
+    <style>
+        /* Add your existing CSS styles here */
+
+        /* Define the card layout styles */
+        .card {
+            background-color: #fff; /* Background color for the card */
+            border: 1px solid #ccc; /* Border color for the card */
+            border-radius: 5px; /* Rounded corners for the card */
+            padding: 20px; /* Padding inside the card */
+            margin: 10px; /* Margin around the card */
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Card shadow */
+        }
+
+      
+        /* Define the tab styles */
+        .tabs-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            background-color: #f2f2f2; /* Background color for the tab links */
+            border: 1px solid #ccc; /* Border color for the tab links */
+            padding: 10px 15px; /* Padding inside the tab links */
+            border-radius: 5px; /* Rounded corners for the tab links */
+            cursor: pointer; /* Change cursor to pointer on hover */
+            margin: 5px; /* Margin around the tab links */
+            width: calc(33.33% - 10px); /* Maximum of 3 tabs in each row */
+        }
+
+        /* Style for the active tab link */
+        .active {
+            background-color: limegreen; /* Background color for the active tab link */
+            color: #fff; /* Text color for the active tab link */
+        }
+        </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Inventory Dashboard</title>
+   
 </head>
 <body>
     <header>
         <h1>Food Inventory Dashboard</h1>
         <nav>
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="/FoodInventory/UpdateFood">Update Unused Food</a></li>
                 <li><a href="/CommonDashboard/LogOut">Logout</a></li>
                 <li><a href="#" onclick="goBack()">Back</a></li>
             </ul>
         </nav>
     </header>
-
+     <div class="card">
+        <!-- Tab links -->
+        <div class="tabs-container">
+            <!-- Tab links -->
+            <div class="tab active" onclick="openTab('updateunusedfoodTab')" id="updateunusedfoodTab">Update Unused Food</div>
+            <!-- Add more tabs as needed -->
+        </div>
+    </div>
     <footer>
         <!-- Footer content -->
     </footer>
