@@ -12,6 +12,8 @@ using Accord.MachineLearning;
 using System.Security.Cryptography;
 using coremvctest.RequestModels;
 using AutoMapper;
+using coremvctest.IService;
+using coremvctest.Utility.Content;
 
 namespace coremvctest.Controllers
 {
@@ -20,11 +22,15 @@ namespace coremvctest.Controllers
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _db;
         private readonly IMapper _mapper;
-        public NGOController(ApplicationDbContext db,IConfiguration configuration, IMapper mapper)
+        private readonly INGOService _ngoService;
+        private readonly IAuthenticationService _authenticationService;
+        public NGOController(ApplicationDbContext db,IConfiguration configuration, IMapper mapper,INGOService ngoService,IAuthenticationService authenticationService)
         {
             _db = db;
             _configuration = configuration;
             _mapper = mapper;
+            _ngoService = ngoService;
+            _authenticationService = authenticationService;
         }
         public IActionResult NGODashboard()
         {
@@ -43,76 +49,46 @@ namespace coremvctest.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult NGOLogin(NGOLoginRequestModel ngo)
+        public async Task<IActionResult> NGOLogin(NGOLoginRequestModel ngo)
         {
-            var existingNGO = _db.NGOs.SingleOrDefault(m =>
-         m.NGOUserName == ngo.NGOUserName);
+            NGOEntity existingNGO = await _ngoService.getNGOById(ngo);
 
-            if (existingNGO != null && VerifyPassword(ngo.Password ?? String.Empty, existingNGO.Salt ?? new byte[0], existingNGO.HashPassword ?? new byte[0]))            {
+            if (existingNGO.NGOUserName != null && VerifyPassword(ngo.Password ?? String.Empty, existingNGO.Salt ?? new byte[0], existingNGO.HashPassword ?? new byte[0]))           
+            {
                 HttpContext.Session.SetInt32("NGOId", existingNGO.NGOId);
                 HttpContext.Session.SetString("NGOLocation", existingNGO.Location);
+                string token = _authenticationService.GenerateTokenForNGO(existingNGO);
+                if (token == UserMessages.invalidCredentials)
+                    return View("NGOLogin");
+                var cookieOptions = new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Expires = DateTime.UtcNow.AddMinutes(120)
+                };
+                Response.Cookies.Append("AuthToken", token, cookieOptions);
                 return RedirectToAction("NGODashboard");
             }
             else
             {
-                //Authentication failed, return a view indicating login failure
                 return View("NGOLogin");
-            }
-        }
-        public byte[] GenerateSalt(int length)
-        {
-            byte[] salt = new byte[length];
-            using (var rng = new RNGCryptoServiceProvider())
-            {
-                rng.GetBytes(salt);
-            }
-            return salt;
-        }
-        public byte[] HashPassword(string password, byte[] salt, int iterations = 10000)
-        {
-            using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations))
-            {
-                return pbkdf2.GetBytes(32); // 32 bytes for SHA256
             }
         }
         public bool VerifyPassword(string password, byte[] salt, byte[] hash, int iterations = 10000)
         {
 
-            byte[] testHash = HashPassword(password, salt, iterations);
-            return SlowEquals(hash, testHash);
+            byte[] testHash = _ngoService.HashPassword(password, salt, iterations);
+            return _ngoService.SlowEquals(hash,testHash);
         }
-
-        private static bool SlowEquals(byte[] a, byte[] b)
-        {
-            uint diff = (uint)a.Length ^ (uint)b.Length;
-            for (int i = 0; i < a.Length && i < b.Length; i++)
-                diff |= (uint)(a[i] ^ b[i]);
-            return diff == 0;
-        }
-        //public string HashPassword(string password)
-        //{
-        //    // Generate a random salt
-        //    string salt = BCrypt.Net.BCrypt.GenerateSalt();
-
-        //    // Hash the password with the salt
-        //    string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
-
-        //    return hashedPassword;
-        //}
-
-        //public bool VerifyPassword(string password, string hashedPassword)
-        //{
-        //    // Verify the password against the hashed password
-        //    return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
-        //}
         [HttpPost]
         public async Task<IActionResult> NGOSignUp(NGORequestModels ngoData)
         {
             if (ModelState.IsValid)
             {
-                byte[] salt = GenerateSalt(16);
+                byte[] salt = _ngoService.GenerateSalt(16);
                 ngoData.Salt = salt;
-                ngoData.HashPassword = HashPassword(ngoData.Password ?? String.Empty, salt);
+                ngoData.HashPassword = _ngoService.HashPassword(ngoData.Password ?? String.Empty, salt); ;
                 NGOEntity ngo = _mapper.Map<NGOEntity>(ngoData);
                 ngo.IsActive = false;
                 _db.NGOs.Add(ngo);
@@ -179,7 +155,7 @@ namespace coremvctest.Controllers
 
             var foodsWithDistances = nearestLocationsWithDistances
                 .SelectMany(locWithDistance => _db.Foods
-                    .Where(food => food.FoodInventoryId == locWithDistance.Location.Id)
+                    .Where(food => Convert.ToInt32(food.Location) == locWithDistance.Location.Id)
                     .Select(foodEntity => new FoodEntityWithDistance
                     {
                         FoodEntity = foodEntity,

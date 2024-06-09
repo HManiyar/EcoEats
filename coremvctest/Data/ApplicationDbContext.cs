@@ -12,7 +12,7 @@ namespace coremvctest.Data
         public DbSet<NGOEntity> NGOs { get; set; }
         public DbSet<FoodsEntity> Foods { get; set; }
         public DbSet<ExpireWarnings> ExpireWarnings { get; set; }
-        public DbSet<RequestedFoodsByNGO> RequestedFoodsByNGO { get; set; }
+        public DbSet<RequestedFoodsByNGO> RequestedFoodByNGO { get; set; }
         public DbSet<RequestedInquiryFoodsResult> RequestedInquiryFoodsResult { get; set; }
         public DbSet<LocationEntity> Locations { get; set; }
 

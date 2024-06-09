@@ -77,6 +77,7 @@ namespace coremvctest.Models
         //[DataType(DataType.Date)]  
         public DateTime? CustomExpiryDate { get; set; }
         public int? RemainingDays { get; set; }
+        public string? Location { get; set; }
     }
 
     public enum Condition

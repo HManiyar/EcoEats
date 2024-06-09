@@ -28,8 +28,6 @@
 
   <ItemGroup>
     <Folder Include="fonts\" />
-    <Folder Include="IRepository\" />
-    <Folder Include="Repository\" />
     <Folder Include="ResponseModels\" />
   </ItemGroup>
 

@@ -76,7 +76,7 @@ function submitFoodData() {
     var foodRequests = [];
     var medicineContainers = form.querySelectorAll('.medicine-request');
     medicineContainers.forEach(function (container, index) {
-        var category = container.querySelector('#category').value;
+        var category = container.querySelector('#foodSelection').value;
         var quantity = container.querySelector('#quantity').value;
 
         // Create an object for each medicine request
@@ -91,7 +91,7 @@ function submitFoodData() {
     // Prepare JSON object
     var requestData = {
         deliveryTime: deliveryTime,
-        medicines: foodRequests
+        foods: foodRequests
     };
 
     $.ajax({

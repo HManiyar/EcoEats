@@ -24,12 +24,14 @@ namespace coremvctest.Controllers
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private readonly IAuthenticationService _authenticationService;
-        public FoodInventoryController(ApplicationDbContext db, IConfiguration configuration, IMapper mapper, IAuthenticationService authenticationServices)
+        private readonly IFoodInventoryService _foodInventoryService;
+        public FoodInventoryController(ApplicationDbContext db, IConfiguration configuration, IMapper mapper, IAuthenticationService authenticationServices, IFoodInventoryService foodInventoryService)
         {
             _db = db;
             _configuration = configuration;
             _mapper = mapper;
             _authenticationService = authenticationServices;
+            _foodInventoryService = foodInventoryService;
         }
         public IActionResult FoodInventoryDashboard()
         {
@@ -56,7 +58,9 @@ namespace coremvctest.Controllers
 
                 // Assuming the medicine data is valid, save it in the database
                 int? foodInventoryId = HttpContext.Session.GetInt32("FoodInventoryId");
+                string? foodInventoryLocation = HttpContext.Session.GetString("FoodInventoryLocation");
                 foodsData.FoodInventoryId = foodInventoryId.Value;
+                foodsData.Location = foodInventoryLocation;
                 _db.Foods.Add(foodsData);
                 await _db.SaveChangesAsync(); // Save medicine data asynchronously
 
@@ -81,52 +85,13 @@ namespace coremvctest.Controllers
                 return View("FoodInventoryDashboard", ex);
             }
         }
-        public byte[] GenerateSalt(int length)
-        {
-            byte[] salt = new byte[length];
-            using (var rng = new RNGCryptoServiceProvider())
-            {
-                rng.GetBytes(salt);
-            }
-            return salt;
-        }
-        public byte[] HashPassword(string password, byte[] salt, int iterations = 10000)
-        {
-            using (var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations))
-            {
-                return pbkdf2.GetBytes(32); // 32 bytes for SHA256
-            }
-        }
         public bool VerifyPassword(string password, byte[] salt, byte[] hash, int iterations = 10000)
         {
 
-            byte[] testHash = HashPassword(password, salt, iterations);
-            return SlowEquals(hash, testHash);
+            byte[] testHash = _foodInventoryService.HashPassword(password, salt, iterations);
+            return _foodInventoryService.SlowEquals(hash, testHash);
         }
-
-        private static bool SlowEquals(byte[] a, byte[] b)
-        {
-            uint diff = (uint)a.Length ^ (uint)b.Length;
-            for (int i = 0; i < a.Length && i < b.Length; i++)
-                diff |= (uint)(a[i] ^ b[i]);
-            return diff == 0;
-        }
-        //public string HashPassword(string password)
-        //{
-        //    // Generate a random salt
-        //    string salt = BCrypt.Net.BCrypt.GenerateSalt();
-
-        //    // Hash the password with the salt
-        //    string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
-
-        //    return hashedPassword;
-        //}
-
-        //public bool VerifyPassword(string password, string hashedPassword)
-        //{
-        //    // Verify the password against the hashed password
-        //    return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
-        //}
+     
         [HttpPost]
         public async Task<IActionResult> FoodInventorySignUp(FoodInventoryRequestModel foodStore)
         {
@@ -134,9 +99,9 @@ namespace coremvctest.Controllers
             //{
             if (ModelState.IsValid)
             {
-                byte[] salt = GenerateSalt(16);
+                byte[] salt = _foodInventoryService.GenerateSalt(16);
                 foodStore.Salt = salt;
-                foodStore.HashPassword = HashPassword(foodStore.Password ?? String.Empty, salt);
+                foodStore.HashPassword = _foodInventoryService.HashPassword(foodStore.Password ?? String.Empty, salt);
                 FoodStoreEntity foodEntity = _mapper.Map<FoodStoreEntity>(foodStore);
                 _db.FoodInventories.Add(foodEntity);
                 _db.SaveChanges();
@@ -180,14 +145,14 @@ namespace coremvctest.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult FoodInventoryLogin(FoodInventoryLoginRequestModel foodStore)
+        public async Task<IActionResult> FoodInventoryLogin(FoodInventoryLoginRequestModel foodStore)
         {
-            var existingFoodInventory = _db.FoodInventories.SingleOrDefault(m =>
-         m.FoodInventoryUserName == foodStore.FoodInventoryUserName);
+            FoodStoreEntity existingFoodInventory = await _foodInventoryService.getFoodInventoryById(foodStore);
 
-            if (existingFoodInventory != null && VerifyPassword(foodStore.Password ?? String.Empty, existingFoodInventory.Salt ?? new byte[0], existingFoodInventory.HashPassword ?? new byte[0]))
+            if (existingFoodInventory.FoodInventoryUserName != null && VerifyPassword(foodStore.Password ?? String.Empty, existingFoodInventory.Salt ?? new byte[0], existingFoodInventory.HashPassword ?? new byte[0]))
             {
                 HttpContext.Session.SetInt32("FoodInventoryId", existingFoodInventory.FoodInventoryId);
+                HttpContext.Session.SetString("FoodInventoryLocation", existingFoodInventory.Location??String.Empty);
                 string token = _authenticationService.GenerateTokenForFoodInventory(existingFoodInventory);
                 if (token == UserMessages.invalidCredentials)
                     return View("FoodInventoryLogin");

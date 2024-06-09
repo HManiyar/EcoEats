@@ -27,13 +27,17 @@ namespace coremvctest.Models
     }
     public class RequestedInquiryFoodsResult
     {
-        public string Category { get; set; }
-        public int TotalRequestedQuantity { get; set; }
+        public string? Category { get; set; }
+        //public int TotalRequestedQuantity { get; set; }
 
         // Properties representing columns from RequestedFoodsByNGO
         public int Id { get; set; }
         public int NGOId { get; set; }
         public DateTime DeliveryTime { get; set; }
         public int Quantity { get; set; }
+        public string? NGOName { get; set; }
+        public string? LocationName { get; set; }
+        public string? ContactPerson { get; set; }
+        public string? Phone { get; set; }
     }
 }

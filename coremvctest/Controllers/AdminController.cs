@@ -73,19 +73,25 @@ namespace coremvctest.Controllers
         }
         public IActionResult InquiredFoodsData(string search)
         {
-            var inquiredNGOList = _db.RequestedFoodsByNGO.ToList();
+            try { 
+            var inquiredNGOList = _db.RequestedFoodByNGO.ToList();
             var uniqueRecords = inquiredNGOList
         .GroupBy(x => new { x.NGOId, x.DeliveryTime })
         .Select(group => group.First())
         .ToList();
-            return Json(uniqueRecords);
+                return Json(uniqueRecords);
+            }
+            catch(Exception ex)
+            {
+                return Json(null);
+            }
         }
         public IActionResult GetRequestedFoodReports(int ngoId, string deliveryTime)
         {
             try
             {
                 List<RequestedInquiryFoodsResult> result = _db.RequestedInquiryFoodsResult
-                    .FromSqlRaw("CALL GetFoodUpdatesForInquiries(@ngoId, @deliveryTime)",
+                    .FromSqlRaw("CALL GetFoodUpdatesForInquiriesFromNGO(@ngoId, @deliveryTime)",
                         new MySqlParameter("@ngoId", MySqlDbType.Int32) { Value = ngoId },
                         new MySqlParameter("@deliveryTime", MySqlDbType.DateTime) { Value = deliveryTime })
                     .ToList();
@@ -173,16 +179,21 @@ namespace coremvctest.Controllers
 
             // Table
             htmlBuilder.AppendLine("<table style=\"width: 100%; border-collapse: collapse;\">");
-            htmlBuilder.AppendLine("<tr style=\"background-color: #4CAF50; color: black;\"><th>Number</th><th>NGO ID</th><th>Category</th><th>Total Requested Quantity</th><th>Quantity</th><th>Delivery Time</th></tr>");
+            htmlBuilder.AppendLine("<tr style=\"background-color: #4CAF50; color: black;\"><th>Number</th><th>NGO ID</th><th>NGO Name</th><th>Location</th><th>Category</th><th>Phone Number</th><th>Contact Person</th><th>Quantity</th><th>Delivery Time</th></tr>");
             foreach (var row in result)
             {
                             htmlBuilder.AppendLine("<tr>");
                 htmlBuilder.AppendLine($"<td>{row.Id}</td>");
                 htmlBuilder.AppendLine($"<td>{row.NGOId}</td>");
+                htmlBuilder.AppendLine($"<td>{row.NGOName}</td>");
+                htmlBuilder.AppendLine($"<td>{row.LocationName}</td>");
+                htmlBuilder.AppendLine($"<td>{row.ContactPerson}</td>");
+                htmlBuilder.AppendLine($"<td>{row.Phone}</td>");
                 htmlBuilder.AppendLine($"<td>{row.Category}</td>");
-                string quantityClass = (row.Quantity < row.TotalRequestedQuantity) ? "green" : "red";
-                htmlBuilder.AppendLine($"<td class=\"{quantityClass}\">{row.Quantity}</td>");
-                htmlBuilder.AppendLine($"<td>{row.TotalRequestedQuantity}</td>");
+                htmlBuilder.AppendLine($"<td>{row.Quantity}</td>");
+                //string quantityClass = (row.Quantity < row.TotalRequestedQuantity) ? "green" : "red";
+                //htmlBuilder.AppendLine($"<td class=\"{quantityClass}\">{row.Quantity}</td>");
+                //htmlBuilder.AppendLine($"<td>{row.TotalRequestedQuantity}</td>");
                 htmlBuilder.AppendLine($"<td>{row.DeliveryTime.ToString("yyyy-MM-dd")}</td>");
                 htmlBuilder.AppendLine("</tr>");                     
             }

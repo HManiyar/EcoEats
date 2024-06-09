@@ -17,5 +17,11 @@ namespace coremvctest.IService
 		/// <param name="user">The user for whom the token is to be generated.</param>
 		/// <returns>A JWT string for the given user.</returns>
 		public string GenerateTokenForFoodInventory(FoodStoreEntity? foodInventory);
+		/// <summary>
+		/// Generates a JWT (JSON Web Token) for the specified user.
+		/// </summary>
+		/// <param name="user">The user for whom the token is to be generated.</param>
+		/// <returns>A JWT string for the given user.</returns>
+		public string GenerateTokenForNGO(NGOEntity? ngo);
 	}
 }

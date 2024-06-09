@@ -37,6 +37,31 @@ namespace coremvctest.Service
                 return UserMessages.somethingWentWrong;
             return token;
         }
+        /// <summary>
+		/// Generates a JWT (JSON Web Token) for the specified user.
+		/// </summary>
+		/// <param name="user">The user for whom the token is to be generated.</param>
+		/// <returns>A JWT string for the given user.</returns>
+		public string GenerateTokenForNGO(NGOEntity? ngo)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"] ?? string.Empty));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, ngo?.NGOUserName??string.Empty),
+                new Claim(ClaimTypes.NameIdentifier, Convert.ToString(ngo?.NGOId)??string.Empty),
+            };
+            var Sectoken = new JwtSecurityToken(_config["Jwt:Issuer"],
+              _config["Jwt:Issuer"],
+              claims,
+              expires: DateTime.Now.AddMinutes(120),
+              signingCredentials: credentials);
+
+            var token = new JwtSecurityTokenHandler().WriteToken(Sectoken);
+            if (token == null)
+                return UserMessages.somethingWentWrong;
+            return token;
+        }
 
         public bool validateJwtToken(string jwtToken, HttpContext httpContext)
         {
